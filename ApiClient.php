@@ -192,14 +192,14 @@ class ApiClient {
      *
      * @return stdClass
      */
-    public function addEmails($listID, $emails)
+    public function addEmail($listID, $email)
     {
         if (empty($listID) || empty($title)) {
             return $this->handleError('Empty list id or emails');
         }
 	
 	$data = array(
-            'emails' => serialize($emails),
+            'emails' => serialize($email),
         );
 
         $data = array('title' => $title);
@@ -229,6 +229,51 @@ class ApiClient {
 
         $data = array('title' => $title);
         $requestResult = $this->sendRequest('email/lists/' . $listID . '/recipients', 'POST', $data);
+
+        return $this->handleResult($requestResult);
+    }
+    
+    /**
+     * Список получателей
+     * https://notisend.ru/dev/email/api/#TOC_10fe8b80807429140de5cdedbbca66fa
+     *
+     * @param $listID	
+     *
+     * @return stdClass
+     */
+    public function listEmail($listID)
+    {
+        if (empty($listID) || empty($title)) {
+            return $this->handleError('Empty list id or emails');
+        }
+	
+        $data = array('title' => $title);
+        $requestResult = $this->sendRequest('email/lists/' . $listID . '/recipients');
+
+        return $this->handleResult($requestResult);
+    }
+    
+    /**
+     * Импорт большого количества получателей
+     * https://notisend.ru/dev/email/api/#TOC_6f234453ae84e3562439ebd55c5c9fb2
+     *
+     * @param $listID	
+     * @param $emails
+     *
+     * @return stdClass
+     */
+    public function importEmails($listID, $emails)
+    {
+        if (empty($listID) || empty($title)) {
+            return $this->handleError('Empty list id or emails');
+        }
+	
+	$data = array(
+            'emails' => serialize($emails),
+        );
+
+        $data = array('title' => $title);
+        $requestResult = $this->sendRequest('email/lists/' . $listID . '/recipients/imports', 'POST', $data);
 
         return $this->handleResult($requestResult);
     }
