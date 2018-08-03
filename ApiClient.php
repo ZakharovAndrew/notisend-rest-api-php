@@ -93,6 +93,7 @@ class ApiClient {
 
     /**
      * Создание группы
+     * https://notisend.ru/dev/email/api/#TOC_d7a6319e563f08691be55897faac38c2
      *
      * @param $title
      *
@@ -112,6 +113,7 @@ class ApiClient {
     
     /**
      * Получение списка групп
+     * https://notisend.ru/dev/email/api/#TOC_e64525558830f2712ecde8e19f7d16d8
      *
      * @return stdClass
      */
@@ -132,6 +134,101 @@ class ApiClient {
     public function listInfo($id)
     {
         $requestResult = $this->sendRequest('email/lists/'.$id);
+
+        return $this->handleResult($requestResult);
+    }
+    
+    /**
+     * Создание параметра
+     * https://notisend.ru/dev/email/api/#TOC_3b06e18961c188597644d60c2343ce48
+     *
+     * @param $id
+     * @param $title
+     * @param $kind	Возможные значения: string, numeric, date, boolean, geo
+     *
+     * @return stdClass
+     */
+    public function createParameters($id, $title, $kind = 'string')
+    {
+        if (empty($id) || empty($title)) {
+            return $this->handleError('Empty Id or title');
+        }
+	
+	if (!in_array($kind, array(string, numeric, date, boolean, geo))) {
+            return $this->handleError('Wrong kind');
+        }
+
+        $data = array('title' => $title);
+        $requestResult = $this->sendRequest('email/lists/'.$id.'/parameters', 'POST', $data);
+
+        return $this->handleResult($requestResult);
+    }
+    
+    /**
+     * Список параметров
+     * https://notisend.ru/dev/email/api/#TOC_bc0ae9e81eb195127212c4538ee073dd
+     *
+     * @param $id
+     *
+     * @return stdClass
+     */
+    public function listParameters($id, $title, $kind = 'string')
+    {
+        if (empty($id)) {
+            return $this->handleError('Empty Id');
+        }
+
+        $requestResult = $this->sendRequest('email/lists/'.$id.'/parameters');
+
+        return $this->handleResult($requestResult);
+    }
+    
+    /**
+     * Создание получателя
+     * https://notisend.ru/dev/email/api/#TOC_104ddb5cb56a2c6fdda92686e182c9a5
+     *
+     * @param $listID	
+     * @param $emails
+     *
+     * @return stdClass
+     */
+    public function addEmails($listID, $emails)
+    {
+        if (empty($listID) || empty($title)) {
+            return $this->handleError('Empty list id or emails');
+        }
+	
+	$data = array(
+            'emails' => serialize($emails),
+        );
+
+        $data = array('title' => $title);
+        $requestResult = $this->sendRequest('email/lists/' . $listID . '/recipients', 'POST', $data);
+
+        return $this->handleResult($requestResult);
+    }
+    
+    /**
+     * Обновление получателя
+     * https://notisend.ru/dev/email/api/#TOC_10fe8b80807429140de5cdedbbca66fa
+     *
+     * @param $listID	
+     * @param $email
+     *
+     * @return stdClass
+     */
+    public function updateEmail($listID, $email)
+    {
+        if (empty($listID) || empty($title)) {
+            return $this->handleError('Empty list id or emails');
+        }
+	
+	$data = array(
+            'email' => serialize($emails),
+        );
+
+        $data = array('title' => $title);
+        $requestResult = $this->sendRequest('email/lists/' . $listID . '/recipients', 'POST', $data);
 
         return $this->handleResult($requestResult);
     }
