@@ -20,6 +20,14 @@ try {
     
     //get info about group with ID 12345
     var_dump($ApiClient->listInfo(12345));
+    
+    /*
+     * Example: Add parameters to mailing lists
+     */
+    $bookID = 12345; //mailing lists
+    var_dump($ApiClient->createParameters($bookID,'FirstName', 'string'));
+    var_dump($ApiClient->createParameters($bookID,'SecondName', 'string'));
+    
 } catch (Exception $e) {
     print $e->getLine() . ' : ' . $e->getMessage() . PHP_EOL;
     exit();
