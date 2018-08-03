@@ -1,5 +1,5 @@
 # NotiSend REST client library
-A simple NotiSend REST client library and example for PHP.
+A simple NotiSend REST client library for email and example for PHP.
 
 API Documentation https://notisend.ru/dev/email/api/
 
@@ -11,10 +11,13 @@ include 'ApiClient.php';
 
 try {
     $ApiClient = new ApiClient('TOKEN');
+    
     //create test group
     var_dump($ApiClient->createGroup('TEST1'));
+    
     //get list group
     var_dump($ApiClient->listGroup());
+    
     //get info about group with ID 12345
     var_dump($ApiClient->listInfo(12345));
 } catch (Exception $e) {
