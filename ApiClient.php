@@ -106,6 +106,7 @@ class ApiClient {
         }
 
         $data = array('title' => $title);
+	
         $requestResult = $this->sendRequest('email/lists', 'POST', $data);
 
         return $this->handleResult($requestResult);
@@ -158,7 +159,10 @@ class ApiClient {
             return $this->handleError('Wrong kind');
         }
 
-        $data = array('title' => $title);
+        $data = array(
+	    'title' => $title,
+	    'kind'  => $kind
+	);
         $requestResult = $this->sendRequest('email/lists/'.$id.'/parameters', 'POST', $data);
 
         return $this->handleResult($requestResult);
@@ -197,13 +201,8 @@ class ApiClient {
         if (empty($listID) || empty($title)) {
             return $this->handleError('Empty list id or emails');
         }
-	
-	$data = array(
-            'emails' => serialize($email),
-        );
 
-        $data = array('title' => $title);
-        $requestResult = $this->sendRequest('email/lists/' . $listID . '/recipients', 'POST', $data);
+        $requestResult = $this->sendRequest('email/lists/' . $listID . '/recipients', 'POST', $email);
 
         return $this->handleResult($requestResult);
     }
@@ -222,13 +221,8 @@ class ApiClient {
         if (empty($listID) || empty($title)) {
             return $this->handleError('Empty list id or emails');
         }
-	
-	$data = array(
-            'email' => serialize($emails),
-        );
 
-        $data = array('title' => $title);
-        $requestResult = $this->sendRequest('email/lists/' . $listID . '/recipients', 'POST', $data);
+        $requestResult = $this->sendRequest('email/lists/' . $listID . '/recipients', 'POST', $email);
 
         return $this->handleResult($requestResult);
     }
@@ -247,7 +241,6 @@ class ApiClient {
             return $this->handleError('Empty list id or emails');
         }
 	
-        $data = array('title' => $title);
         $requestResult = $this->sendRequest('email/lists/' . $listID . '/recipients');
 
         return $this->handleResult($requestResult);
@@ -267,13 +260,27 @@ class ApiClient {
         if (empty($listID) || empty($title)) {
             return $this->handleError('Empty list id or emails');
         }
-	
-	$data = array(
-            'emails' => serialize($emails),
-        );
 
-        $data = array('title' => $title);
-        $requestResult = $this->sendRequest('email/lists/' . $listID . '/recipients/imports', 'POST', $data);
+        $requestResult = $this->sendRequest('email/lists/' . $listID . '/recipients/imports', 'POST', $emails);
+
+        return $this->handleResult($requestResult);
+    }
+    
+    /**
+     * Создание организации
+     * https://notisend.ru/dev/email/api/#TOC_d7c6cfb4c802aab25fc23a2fe24fc665
+     *
+     * @param $organization
+     *
+     * @return stdClass
+     */
+    public function createOrganization($organization)
+    {
+        if (empty($organization)) {
+            return $this->handleError('Empty organization');
+        }
+
+        $requestResult = $this->sendRequest('email/organizations', 'POST', $organization);
 
         return $this->handleResult($requestResult);
     }
