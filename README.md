@@ -28,6 +28,29 @@ try {
     var_dump($ApiClient->createParameters($bookID,'FirstName', 'string'));
     var_dump($ApiClient->createParameters($bookID,'SecondName', 'string'));
     
+    /*
+     * Example: Add new email to mailing lists
+     */
+    $bookID = 123456;
+    
+    $email = 
+	array(
+        'email' => 'alice@example.org',
+	'unconfirmed' => true,
+        'values' => array(
+	    array(
+	        'parameter_id' => '12345',
+	        'value' => 'Alice',
+	    ),
+	    array(
+	        'parameter_id' => '12346',
+	        'value' => 'Jons',
+	    )
+	    ),
+	
+    );
+    var_dump($ApiClient->addEmail($bookID,$email));
+    
 } catch (Exception $e) {
     print $e->getLine() . ' : ' . $e->getMessage() . PHP_EOL;
     exit();
