@@ -50,6 +50,7 @@ class ApiClient {
         $headers = array('Authorization: Bearer ' . $this->token , 'Content-Type: application/json');
         curl_setopt($curl, CURLOPT_HTTPHEADER, $headers);
 
+	//var_dump(json_encode($data));
         switch ($method) {
             case 'POST':
 		curl_setopt($curl, CURLOPT_POST, true);
@@ -68,6 +69,9 @@ class ApiClient {
                     $url .= '?' . http_build_query($data);
                 }
         }
+	
+	// для отладки
+	echo "curl -X ".$method." ".$url." -H 'Content-Type: application/json' -H 'Authorization: Bearer ".$this->token."' -d '".json_encode($data)."'<br>";
 
         curl_setopt($curl, CURLOPT_URL, $url);
         curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
@@ -155,7 +159,7 @@ class ApiClient {
             return $this->handleError('Empty Id or title');
         }
 	
-	if (!in_array($kind, array(string, numeric, date, boolean, geo))) {
+	if (!in_array($kind, array('string', 'numeric', 'date', 'boolean', 'geo'))) {
             return $this->handleError('Wrong kind');
         }
 
@@ -176,7 +180,7 @@ class ApiClient {
      *
      * @return stdClass
      */
-    public function listParameters($id, $title, $kind = 'string')
+    public function listParameters($id)
     {
         if (empty($id)) {
             return $this->handleError('Empty Id');
@@ -198,7 +202,7 @@ class ApiClient {
      */
     public function addEmail($listID, $email)
     {
-        if (empty($listID) || empty($title)) {
+        if (empty($listID) || empty($email)) {
             return $this->handleError('Empty list id or emails');
         }
 
