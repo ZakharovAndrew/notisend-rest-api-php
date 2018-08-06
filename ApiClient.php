@@ -94,6 +94,64 @@ class ApiClient {
 
         return $retval;
     }
+    
+    /**
+     * Отправка одиночного email сообщения
+     * https://notisend.ru/dev/email/api/#email
+     *
+     * @param $message
+     *
+     * @return stdClass
+     */
+    public function sendMessage($message)
+    {
+        if (empty($message)) {
+            return $this->handleError('Empty message');
+        }
+
+        $requestResult = $this->sendRequest('email/messages', 'POST', $message);
+
+        return $this->handleResult($requestResult);
+    }
+
+    /**
+     * Получение информации о сообщении
+     * https://notisend.ru/dev/email/api/#TOC_218a2d49ce4e61a5b3e99b45737314a9
+     *
+     * @param $ID	
+     *
+     * @return stdClass
+     */
+    public function getMessageInfo($ID)
+    {
+        if (empty($ID)) {
+            return $this->handleError('Empty id');
+        }
+	
+        $requestResult = $this->sendRequest('email/messages/' . $ID);
+
+        return $this->handleResult($requestResult);
+    }
+    
+    /**
+     * Отправка одиночного сообщения по шаблону
+     * https://notisend.ru/dev/email/api/#TOC_d7a6319e563f08691be55897faac38c2
+     *
+     * @param $listID	
+     * @param $message
+     *
+     * @return stdClass
+     */
+    public function sendMessageWithTemplate($listID, $message )
+    {
+        if (empty($listID) || empty($message)) {
+            return $this->handleError('Empty list id or message');
+        }
+
+        $requestResult = $this->sendRequest('email/templates/' . $listID . '/messages', 'POST', $message);
+
+        return $this->handleResult($requestResult);
+    }
 
     /**
      * Создание группы
@@ -136,7 +194,7 @@ class ApiClient {
      *
      * @return stdClass
      */
-    public function listInfo($id)
+    public function getListInfo($id)
     {
         $requestResult = $this->sendRequest('email/lists/'.$id);
 
@@ -241,8 +299,8 @@ class ApiClient {
      */
     public function listEmail($listID)
     {
-        if (empty($listID) || empty($title)) {
-            return $this->handleError('Empty list id or emails');
+        if (empty($listID)) {
+            return $this->handleError('Empty list id');
         }
 	
         $requestResult = $this->sendRequest('email/lists/' . $listID . '/recipients');
@@ -285,6 +343,133 @@ class ApiClient {
         }
 
         $requestResult = $this->sendRequest('email/organizations', 'POST', $organization);
+
+        return $this->handleResult($requestResult);
+    }
+    
+    /**
+     * Список организаций
+     * https://notisend.ru/dev/email/api/#TOC_4de9d7a19d96935172bfc8e32b0020c4
+     *
+     * @param $listID	
+     *
+     * @return stdClass
+     */
+    public function listOrganization($listID)
+    {
+        if (empty($listID)) {
+            return $this->handleError('Empty list id');
+        }
+	
+        $requestResult = $this->sendRequest('email/organizations');
+
+        return $this->handleResult($requestResult);
+    }
+    
+    /**
+     * Информация об организации
+     * https://notisend.ru/dev/email/api/#TOC_c068da17178fafa4fbab1f7caf912cf1
+     *
+     * @param $ID	
+     *
+     * @return stdClass
+     */
+    public function getOrganizationInfo($ID)
+    {
+        if (empty($ID)) {
+            return $this->handleError('Empty id');
+        }
+	
+        $requestResult = $this->sendRequest('email/organizations/' . $ID);
+
+        return $this->handleResult($requestResult);
+    }
+    
+    /**
+     * Организация по умолчанию
+     * https://notisend.ru/dev/email/api/#TOC_59e753782824cdb97755130bd7f953a5
+     *
+     * @return stdClass
+     */
+    public function getDefaultOrganization()
+    {
+        $requestResult = $this->sendRequest('email/organizations/current');
+
+        return $this->handleResult($requestResult);
+    }
+    
+    /**
+     * Задать организацию по умолчанию
+     * https://notisend.ru/dev/email/api/#TOC_d6f7d80b166393914a40c7425b45c57c
+     *
+     * @param $ID	
+     *
+     * @return stdClass
+     */
+    public function setDefaultOrganization($ID)
+    {
+        if (empty($ID)) {
+            return $this->handleError('Empty id');
+        }
+	
+        $requestResult = $this->sendRequest('email/organizations/' . $ID . '/current');
+
+        return $this->handleResult($requestResult);
+    }
+    
+    /**
+     * Создание рассылки
+     * https://notisend.ru/dev/email/api/#TOC_e8f0bf758b04ddeec70cfa1833db9cda
+     *
+     * @param $campaign
+     *
+     * @return stdClass
+     */
+    public function createCampaign($campaign)
+    {
+        if (empty($campaign)) {
+            return $this->handleError('Empty campaign');
+        }
+
+        $requestResult = $this->sendRequest('email/campaigns', 'POST', $campaign);
+
+        return $this->handleResult($requestResult);
+    }
+    
+    /**
+     * Отправка рассылки
+     * https://notisend.ru/dev/email/api/#TOC_34c6772bd3e3a39bd2fdd5032397503f
+     *
+     * @param $campaign
+     *
+     * @return stdClass
+     */
+    public function startCampaign($ID)
+    {
+        if (empty($ID)) {
+            return $this->handleError('Empty id');
+        }
+	
+        $requestResult = $this->sendRequest('email/campaigns/' . $ID . '/deliver');
+
+        return $this->handleResult($requestResult);
+    }
+    
+    /**
+     * Информация о рассылке
+     * https://notisend.ru/dev/email/api/#TOC_ec268b1d0451f763e02695bdf3b88676
+     *
+     * @param $ID	
+     *
+     * @return stdClass
+     */
+    public function getCampaignInfo($ID)
+    {
+        if (empty($ID)) {
+            return $this->handleError('Empty id');
+        }
+	
+        $requestResult = $this->sendRequest('email/campaigns/' . $ID);
 
         return $this->handleResult($requestResult);
     }
