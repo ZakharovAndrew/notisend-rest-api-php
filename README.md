@@ -19,7 +19,7 @@ try {
     var_dump($ApiClient->listGroup());
     
     //get info about group with ID 12345
-    var_dump($ApiClient->listInfo(12345));
+    var_dump($ApiClient->getListInfo(12345));
     
     /*
      * Example: Add parameters to mailing lists
